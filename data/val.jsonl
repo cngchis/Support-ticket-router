@@ -1,0 +1,150 @@
+{"text":"I'm not using the app anymore, please shut down my account.","label":"cancellation"}
+{"text":"I need a refund for the overcharge on my account.","label":"billing"}
+{"text":"The search bar isn't working.","label":"technical"}
+{"text":"Get rid of my account, I'm done.","label":"cancellation"}
+{"text":"Cancel my plan.","label":"cancellation"}
+{"text":"I would like to request a PDF copy of my invoice for October.","label":"billing"}
+{"text":"I keep getting a 500 Internal Server Error when I try to upload a file via the API. I've checked my payload and it seems correct.","label":"api"}
+{"text":"Total waste of my time.","label":"complaint"}
+{"text":"Please terminate my subscription before the next billing date.","label":"cancellation"}
+{"text":"Hello, I've noticed that the auto-save feature isn't working. I lost about an hour of work.","label":"technical"}
+{"text":"I'm done with this service, please close my account.","label":"cancellation"}
+{"text":"We are considering upgrading our entire team to the Professional plan. Could you explain the process for bulk seat upgrades?","label":"upgrade"}
+{"text":"This is too expensive for me, please cancel my subscription.","label":"cancellation"}
+{"text":"I am writing to express my deep dissatisfaction with the current level of service.","label":"complaint"}
+{"text":"Your support team is completely useless.","label":"complaint"}
+{"text":"Please make sure I'm not charged for the next cycle.","label":"cancellation"}
+{"text":"Your team has been completely dismissive of me. I've never felt so ignored by a company.","label":"complaint"}
+{"text":"Why is it so hard to get a straight answer from you guys?","label":"complaint"}
+{"text":"I wanna move up to the Pro version, where do I do that?","label":"upgrade"}
+{"text":"The quality of your support has gone downhill recently.","label":"complaint"}
+{"text":"Hi, I noticed that when I click the 'delete' icon, nothing happens. I've tried refreshing the page but it's still not working.","label":"technical"}
+{"text":"I'm trying to filter my results by date using the API, but the date format isn't being accepted. Should it be ISO 8601 or something else?","label":"api"}
+{"text":"I'm tired of being ignored.","label":"complaint"}
+{"text":"This whole experience has been a nightmare.","label":"complaint"}
+{"text":"I'm seeing some weird overlapping text on the home screen.","label":"technical"}
+{"text":"I wish to migrate my current subscription to the Enterprise level.","label":"upgrade"}
+{"text":"I want to terminate my plan.","label":"cancellation"}
+{"text":"You guys are a joke.","label":"complaint"}
+{"text":"Our team is implementing a custom integration. Could you provide the specific event names that are sent via webhooks for membership changes?","label":"api"}
+{"text":"I'm seeing two separate charges for the same subscription period.","label":"billing"}
+{"text":"My screen just went blank","label":"technical"}
+{"text":"The 'Export to CSV' button is greyed out and I can't click it.","label":"technical"}
+{"text":"I can't afford this anymore, please cancel my sub.","label":"cancellation"}
+{"text":"I have noticed an unauthorized charge on my credit card statement originating from your company. I would like to resolve this as soon as possible.","label":"billing"}
+{"text":"Does the Pro plan include the unlimited storage option?","label":"upgrade"}
+{"text":"I'm hitting the rate limit constantly, but I'm not making that many requests. Is something wrong?","label":"api"}
+{"text":"I've decided that I can't afford this right now. Please cancel my subscription before the next charge.","label":"cancellation"}
+{"text":"I am writing to express my deep disappointment with the level of service I have received lately. It is completely unacceptable.","label":"complaint"}
+{"text":"There is a misalignment issue with the navigation menu on mobile devices.","label":"technical"}
+{"text":"Just cancel my sub. I'm done.","label":"cancellation"}
+{"text":"Could you please guide me on how to switch to the annual billing plan?","label":"upgrade"}
+{"text":"Please end my subscription effective immediately.","label":"cancellation"}
+{"text":"I tried to change my avatar but the upload button doesn't do anything when I click it. Any ideas?","label":"technical"}
+{"text":"I'm quite disappointed with the lack of communication lately.","label":"complaint"}
+{"text":"Hi, the filter on the main page isn't working correctly. It's showing me everything instead of filtering.","label":"technical"}
+{"text":"Can I go back to the Basic plan? The Pro one is too much for me.","label":"upgrade"}
+{"text":"The page won't even load!","label":"technical"}
+{"text":"I'm seriously considering switching to a competitor because of this.","label":"complaint"}
+{"text":"I am appalled by the lack of urgency in resolving my concerns.","label":"complaint"}
+{"text":"I was promised a discount on my first three months, but it's not showing up on my bill.","label":"billing"}
+{"text":"I didn't realize the Pro plan was this expensive, I need to downgrade immediately.","label":"upgrade"}
+{"text":"The SDK version 2.1 seems to have a bug with asynchronous calls.","label":"api"}
+{"text":"You guys really need to fix your support process. It's a mess.","label":"complaint"}
+{"text":"I want to go Pro, how do I do that?","label":"upgrade"}
+{"text":"We are seeing intermittent timeouts when calling the \/v1\/data endpoint. Is there currently any known latency on your API gateway?","label":"api"}
+{"text":"Why is my API key suddenly invalid? It was working fine yesterday.","label":"api"}
+{"text":"I'm trying to use the GET request to pull a list of items, but it only returns 20 results. How do I handle pagination?","label":"api"}
+{"text":"I've reached out multiple times now and I'm still getting nowhere. Your communication is non-existent.","label":"complaint"}
+{"text":"Can I downgrade my account to the free version?","label":"upgrade"}
+{"text":"We are planning a high-volume migration and need to know if there are any burst limits we should be aware of beyond the standard rate limit.","label":"api"}
+{"text":"The SDK is completely broken on Windows.","label":"api"}
+{"text":"My latest statement doesn't match the price I signed up for. What's going on?","label":"billing"}
+{"text":"I need to update the VAT number on my invoices for tax purposes. Who can I send that information to?","label":"billing"}
+{"text":"Please shut down my account, I'm moving to a competitor.","label":"cancellation"}
+{"text":"Hey, how do I refresh my access token?","label":"api"}
+{"text":"I'm tired of waiting for a response that never comes.","label":"complaint"}
+{"text":"Your API documentation is outdated. The endpoint \/v1\/users doesn't seem to accept the parameters listed in the guide.","label":"api"}
+{"text":"I'm losing my patience with this company.","label":"complaint"}
+{"text":"I am very disappointed with the level of service provided.","label":"complaint"}
+{"text":"Where's my refund?","label":"billing"}
+{"text":"I need a refund for the accidental purchase I made yesterday.","label":"billing"}
+{"text":"How do I add a VAT number to my account for invoicing purposes?","label":"billing"}
+{"text":"Why is my bill different this month compared to last month?","label":"billing"}
+{"text":"I've tried restarting my device but the app still crashes the moment I open the settings menu. Fix this please!","label":"technical"}
+{"text":"You guys charged me again even though I already paid!","label":"billing"}
+{"text":"Hey, how do I refresh my access token?","label":"api"}
+{"text":"Why does the page keep refreshing every 10 seconds?","label":"technical"}
+{"text":"Can you tell me which plan gives me the best value for a small team?","label":"upgrade"}
+{"text":"Why am I getting a 429 error every five minutes?","label":"api"}
+{"text":"How do I get the premium features?","label":"upgrade"}
+{"text":"I'd like to cancel my membership immediately.","label":"cancellation"}
+{"text":"I tried implementing the SDK in my Ruby app, but I'm getting a dependency error during installation. Any tips?","label":"api"}
+{"text":"Could you please help me resolve a payment error I'm getting at checkout?","label":"billing"}
+{"text":"Everything was working fine yesterday, but now the whole dashboard is blank. I can't see any of my data!","label":"technical"}
+{"text":"I am experiencing a technical issue where the PDF generator is not producing any files.","label":"technical"}
+{"text":"My dashboard is completely blank.","label":"technical"}
+{"text":"App is lagging like crazy.","label":"technical"}
+{"text":"Can you guys just shut down my account?","label":"cancellation"}
+{"text":"My team is growing and we need more seats. What's the best way to upgrade our current subscription to accommodate 10 more people?","label":"upgrade"}
+{"text":"Could you clarify the authentication flow for the OAuth2 implementation?","label":"api"}
+{"text":"Your API is returning empty arrays for the search endpoint, but the data exists in the dashboard. What's going on?","label":"api"}
+{"text":"Please stop my membership before the next charge.","label":"cancellation"}
+{"text":"I'm thinking about switching from monthly to yearly to save some money. Is that possible?","label":"upgrade"}
+{"text":"I am writing to express my extreme dissatisfaction with your current service standards.","label":"complaint"}
+{"text":"Why am I being charged for a feature that is supposed to be free?","label":"billing"}
+{"text":"I am very disappointed with the level of service I've received.","label":"complaint"}
+{"text":"I'm not using the app anymore, so I want to cancel.","label":"cancellation"}
+{"text":"We are observing an issue where data is not syncing across devices. Changes made on the desktop version are not appearing on the tablet.","label":"technical"}
+{"text":"My trial is ending soon and I don't want to be charged. Please make sure my account is cancelled.","label":"cancellation"}
+{"text":"The 'forgot password' email isn't sending.","label":"technical"}
+{"text":"This is a joke. I can't believe I pay for this service.","label":"complaint"}
+{"text":"Get me out of this subscription ASAP.","label":"cancellation"}
+{"text":"The chart on the analytics page is not displaying any data today.","label":"technical"}
+{"text":"I need to switch my account to the business plan as soon as possible.","label":"upgrade"}
+{"text":"How do I refresh my access token once it expires?","label":"api"}
+{"text":"I received a notice that my payment was declined. Can you tell me why?","label":"billing"}
+{"text":"The search function is completely broken. I know the item exists, but it says 'no results found'.","label":"technical"}
+{"text":"I didn't realize that ignoring customers was part of your official business strategy.","label":"complaint"}
+{"text":"The \/users endpoint is returning a 500 error for certain IDs. Any idea why?","label":"api"}
+{"text":"My card was declined but I have plenty of funds. What's going on?","label":"billing"}
+{"text":"Honestly, what a nightmare.","label":"complaint"}
+{"text":"I'm interested in the higher-tier plan. Could you guide me through the process?","label":"upgrade"}
+{"text":"Absolutely pathetic service.","label":"complaint"}
+{"text":"I need an itemized breakdown of my charges for the last quarter.","label":"billing"}
+{"text":"The API is incredibly slow today, request times are over 5 seconds.","label":"api"}
+{"text":"Is there a way to pay via PayPal?","label":"billing"}
+{"text":"Every single time I try to open the settings menu, the whole app closes. I can't even get to the main page!","label":"technical"}
+{"text":"I just saw a charge on my bank statement that I don't recognize from you guys.","label":"billing"}
+{"text":"Why is my webhook returning a 500 error for every single event?","label":"api"}
+{"text":"How do I refresh my OAuth token?","label":"api"}
+{"text":"I'm sick of hitting the limit every week. Just let me upgrade to the unlimited plan already.","label":"upgrade"}
+{"text":"Kindly cancel my subscription starting today.","label":"cancellation"}
+{"text":"I'd like to cancel my subscription before the next payment goes through.","label":"cancellation"}
+{"text":"Why is this feature locked? Tell me how to upgrade already.","label":"upgrade"}
+{"text":"Stop charging me! I want my account closed now.","label":"cancellation"}
+{"text":"The upload button isn't doing anything.","label":"technical"}
+{"text":"Can I pay my bill with PayPal instead of a card?","label":"billing"}
+{"text":"Completely unprofessional.","label":"complaint"}
+{"text":"I see a charge from you guys on my card but I didn't get an email receipt. Can you send me one?","label":"billing"}
+{"text":"I'm interested in the Gold membership. What specific features are included there?","label":"upgrade"}
+{"text":"I'm currently on the Basic plan but I need the API access. Do I have to upgrade to Pro for that?","label":"upgrade"}
+{"text":"Hey, why is my bill higher this time?","label":"billing"}
+{"text":"Is there a way to test my API calls using a sandbox environment?","label":"api"}
+{"text":"Please end my membership before the next billing cycle.","label":"cancellation"}
+{"text":"Hey, I found a bug. If you click the back button during the checkout process, the whole thing crashes.","label":"technical"}
+{"text":"My payment didn't go through, what's wrong?","label":"billing"}
+{"text":"How do I refresh my OAuth access token?","label":"api"}
+{"text":"The system is failing to sync data across devices, resulting in inconsistent information.","label":"technical"}
+{"text":"I have observed that the PDF generation tool is producing blank pages. I have tried multiple browser versions with the same result.","label":"technical"}
+{"text":"I see a 'Premium' tag on some tools, which plan do I need for those?","label":"upgrade"}
+{"text":"Yo, how do I get those pro tools?","label":"upgrade"}
+{"text":"I'm paying too much for the current plan. Is there a cheaper option I can switch to?","label":"upgrade"}
+{"text":"My team is growing and we need more seats. How do we upgrade our current plan?","label":"upgrade"}
+{"text":"I'm not sure which plan is right for me. Could you tell me what's included in the Business tier?","label":"upgrade"}
+{"text":"I need to update my credit card details because the current one expired.","label":"billing"}
+{"text":"Which version of the API is currently the stable one?","label":"api"}
+{"text":"I am inquiring about the specific premium features available in the Platinum tier.","label":"upgrade"}
+{"text":"I would like to request a copy of my invoices for the last fiscal year.","label":"billing"}
+{"text":"I'm writing to request the closure of my account.","label":"cancellation"}
+{"text":"Can you help me stop my membership?","label":"cancellation"}
