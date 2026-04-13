@@ -1,0 +1,92 @@
+{
+  "billing": {
+    "definition": "Customer questions or issues related to payments, invoices, charges, refunds, pricing, or subscription costs",
+    "keywords": ["invoice", "charge", "payment", "refund", "bill", "price", "cost", "fee"],
+    "examples": [
+      "My invoice shows the wrong amount",
+      "I was charged twice this month",
+      "Can I get a refund for last month?",
+      "Why did my bill increase?"
+    ],
+    "edge_cases": [
+      "Upgrade pricing questions → intent là 'upgrade', không phải 'billing'",
+      "Cancellation refund request → intent là 'cancellation', không phải 'billing'"
+    ]
+  },
+
+  "technical": {
+    "definition": "Customer reports of bugs, errors, crashes, or any feature not working as expected",
+    "keywords": ["crash", "error", "bug", "not working", "broken", "fail", "slow", "login", "cannot access"],
+    "examples": [
+      "The app keeps crashing when I try to login",
+      "I'm getting a 500 error on the dashboard",
+      "The export feature is broken",
+      "Your system is very slow today"
+    ],
+    "edge_cases": [
+      "API errors → intent là 'api', không phải 'technical'",
+      "Login issue do billing/account suspended → intent là 'billing'"
+    ]
+  },
+
+  "cancellation": {
+    "definition": "Customer explicitly requests to cancel, terminate, or not renew their subscription or account",
+    "keywords": ["cancel", "terminate", "end subscription", "close account", "stop renewal", "quit"],
+    "examples": [
+      "I want to cancel my subscription",
+      "Please close my account",
+      "I don't want to renew next month",
+      "How do I stop being charged?"
+    ],
+    "edge_cases": [
+      "Hỏi về cancellation policy mà không có ý định cancel → intent là 'billing'",
+      "Muốn downgrade plan, không phải cancel → intent là 'upgrade'"
+    ]
+  },
+
+  "upgrade": {
+    "definition": "Customer asks about upgrading, downgrading, or switching their subscription plan, or inquires about premium features",
+    "keywords": ["upgrade", "downgrade", "switch plan", "higher tier", "pro plan", "enterprise", "premium"],
+    "examples": [
+      "How do I upgrade to the Pro plan?",
+      "What features do I get with Enterprise?",
+      "I want to switch from monthly to annual",
+      "Can I downgrade my plan?"
+    ],
+    "edge_cases": [
+      "Hỏi giá chung chung → intent là 'billing'",
+      "Hỏi về tính năng không liên quan đến plan → intent là 'technical'"
+    ]
+  },
+
+  "complaint": {
+    "definition": "Customer expresses strong dissatisfaction or frustration about service quality without a specific technical or billing issue",
+    "keywords": ["terrible", "awful", "worst", "frustrated", "angry", "unacceptable", "disappointed", "horrible"],
+    "examples": [
+      "Your service is absolutely terrible",
+      "I've been waiting 3 days and nobody responded",
+      "This is the worst customer support I've ever experienced",
+      "I'm extremely frustrated with your company"
+    ],
+    "edge_cases": [
+      "Complaint kèm vấn đề kỹ thuật cụ thể → intent là 'technical'",
+      "Complaint về billing cụ thể → intent là 'billing'",
+      "Chỉ complaint thuần túy về trải nghiệm → mới là 'complaint'"
+    ]
+  },
+
+  "api": {
+    "definition": "Developer questions about API usage, rate limits, authentication, endpoints, SDK, webhooks, or integrations",
+    "keywords": ["api", "rate limit", "endpoint", "sdk", "webhook", "authentication", "token", "integration"],
+    "examples": [
+      "My API key is not working",
+      "What is the rate limit for the free tier?",
+      "How do I authenticate with OAuth?",
+      "The webhook is not firing on my server"
+    ],
+    "edge_cases": [
+      "API billing/pricing → intent là 'billing'",
+      "General app bug không liên quan đến API → intent là 'technical'"
+    ]
+  }
+}
