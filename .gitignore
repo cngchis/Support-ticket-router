@@ -205,3 +205,19 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+
+# Model weights (quá nặng để push lên GitHub)
+models/phi3-lora/
+
+# Data raw (optional — nếu muốn giữ thì bỏ dòng này)
+data/raw_dataset.jsonl
+
+# Node
+frontend/node_modules/
+frontend/.env
