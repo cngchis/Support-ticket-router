@@ -13,7 +13,7 @@ load_dotenv()
 # Dùng OpenAI client nhưng trỏ vào Google AI Studio
 client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-    api_key=os.getenv("GEMINI_API_KEY")
+    api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 TAXONOMY_PATH     = "data/intent_taxonomy.json"
