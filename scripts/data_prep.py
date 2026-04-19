@@ -1,0 +1,42 @@
+import pandas as pd
+import jsonlines
+from sklearn.model_selection import train_test_split
+from datasets import Dataset
+from scripts.model_loader import load_model
+
+def load_dataset(path):
+    with jsonlines.open("raw_dataset.jsonl") as reader:
+        dataset = list(reader)
+
+    raw = pd.DataFrame(dataset)
+    return raw
+
+def split_dataset(dataset):
+    train, temp = train_test_split(dataset, test_size=0.2, random_state=42, stratify=dataset["label"])
+    val, test = train_test_split(temp, test_size=0.5, random_state=42, stratify=temp["label"])
+
+    train_dataset = train["train"]  # 80%
+    val_dataset = val["test"]  # 10%
+    test_dataset = test["test"]  # 10%
+
+    return train_dataset, val_dataset, test_dataset
+
+def format_prompt(text: str, label: str = None) -> str:
+    prompt = f"""Classify the customer support message into one of these intents:
+    billing, technical, cancellation, upgrade, complaint, api
+
+    Message: {text}
+    Intent:"""
+    if label:
+        prompt += f" {label}"
+    return prompt
+
+def prepare_dataset(df):
+    return Dataset.from_dict({
+        "text": [
+            format_prompt(row["text"], row["label"])
+            for _, row in df.iterrows()
+        ]
+    })
+
+

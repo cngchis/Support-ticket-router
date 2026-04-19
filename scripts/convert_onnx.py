@@ -1,15 +1,16 @@
-from optimum.onnxruntime import ORTModelForSequenceClassification
+from optimum.onnxruntime import ORTModelForCausalLM
 from transformers import AutoTokenizer
 import os
 
-MERGED_PATH = "models/phi4-mini-intent"
+MODEL_PATH = "Phi4-mini-instruct-intent"
 ONNX_PATH   = "models/phi4-mini-intent-onnx"
 
-tokenizer = AutoTokenizer.from_pretrained(MERGED_PATH)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 
-model = ORTModelForSequenceClassification.from_pretrained(
-    MERGED_PATH,
+model = ORTModelForCausalLM.from_pretrained(
+    MODEL_PATH,
     export=True,
+    use_cache=True,
     provider="CPUExecutionProvider"
 )
 
