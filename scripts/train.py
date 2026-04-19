@@ -3,9 +3,8 @@ import os
 from transformers import TrainingArguments, EarlyStoppingCallback
 from unsloth import is_bfloat16_supported
 from trl import SFTTrainer
-from src.data_loader import load_dataset, format_chat_template, split_dataset
-from src.model_loader import load_model, apply_lora
-from src.plot_metrics import plot_training_metrics
+from scripts.data_prep import load_dataset, split_dataset
+from scripts.model_loader import load_model, apply_lora
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 def compute_metrics(eval_pred):
@@ -34,16 +33,16 @@ def main():
     model = apply_lora(model)
 
     # LOAD DATASET
-    dataset = load_dataset("data/raw/raw_dataset.jsonl")
+    dataset = load_dataset("data/raw/clean_dataset.jsonl")
 
     # SPLIT DATASET
     train_dataset, val_dataset, test_dataset = split_dataset(dataset)
 
     # Save Data Processed
     os.makedirs("data/processed", exist_ok=True)
-    train_dataset.to_json("data/processed/train.jsonl")
-    val_dataset.to_json("data/processed/val.jsonl")
-    test_dataset.to_json("data/processed/test.jsonl")
+    train_dataset.to_json("data/processed/train.jsonl", orient="records", lines=True, force_ascii=False)
+    val_dataset.to_json("data/processed/val.jsonl", orient="records", lines=True, force_ascii=False)
+    test_dataset.to_json("data/processed/test.jsonl", orient="records", lines=True, force_ascii=False)
 
     # TRAINING CONFIG
     training_arguments = TrainingArguments(
