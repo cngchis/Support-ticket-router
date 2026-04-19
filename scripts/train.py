@@ -3,9 +3,17 @@ import os
 from transformers import TrainingArguments, EarlyStoppingCallback
 from unsloth import is_bfloat16_supported
 from trl import SFTTrainer
-from scripts.data_prep import load_dataset, split_dataset
+from scripts.data_prep import load_dataset, split_dataset, format_prompt
 from scripts.model_loader import load_model, apply_lora
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+
+def prepare_dataset(df):
+    return Dataset.from_dict({
+        "text": [
+            format_prompt(row["text"], row["label"])
+            for _, row in df.iterrows()
+        ]
+    })
 
 def compute_metrics(eval_pred):
     logits = eval_pred.predictions
@@ -33,7 +41,7 @@ def main():
     model = apply_lora(model)
 
     # LOAD DATASET
-    dataset = load_dataset("data/raw/clean_dataset.jsonl")
+    dataset = load_dataset("data/processed/clean_dataset.jsonl")
 
     # SPLIT DATASET
     train_dataset, val_dataset, test_dataset = split_dataset(dataset)
@@ -43,11 +51,16 @@ def main():
     train_dataset.to_json("data/processed/train.jsonl", orient="records", lines=True, force_ascii=False)
     val_dataset.to_json("data/processed/val.jsonl", orient="records", lines=True, force_ascii=False)
     test_dataset.to_json("data/processed/test.jsonl", orient="records", lines=True, force_ascii=False)
+    
+    # PREPARE DATASET
+    train_dataset = prepare_dataset(train_dataset).shuffle(seed=42)
+    val_dataset = prepare_dataset(val_dataset)
+    test_dataset = prepare_dataset(test_dataset)
 
     # TRAINING CONFIG
     training_arguments = TrainingArguments(
-        per_device_train_batch_size=4,
-        per_device_eval_batch_size=4,
+        per_device_train_batch_size=2,
+        per_device_eval_batch_size=2,
         gradient_accumulation_steps=4,
         num_train_epochs=3,
         eval_strategy="epoch",
@@ -74,7 +87,7 @@ def main():
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         dataset_text_field="text",
-        max_seq_length=2048,
+        max_seq_length=512,
         args=training_arguments,
         callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
         compute_metrics=compute_metrics,

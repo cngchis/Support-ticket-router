@@ -1,6 +1,6 @@
 from unsloth import FastLanguageModel
 
-def load_model(base_model, max_seq_length=2048, load_in_4bit=True):
+def load_model(base_model, max_seq_length=512, load_in_4bit=True):
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=base_model,
         max_seq_length=max_seq_length,
@@ -14,7 +14,6 @@ def apply_lora(
     r=16,
     lora_alpha=16,
     lora_dropout=0,
-    use_gradient_checkpointing=True,
 ):
     model = FastLanguageModel.get_peft_model(
         model,
@@ -26,8 +25,7 @@ def apply_lora(
         lora_alpha=lora_alpha,
         lora_dropout=lora_dropout,
         bias="none",
-        use_gradient_checkpointing=use_gradient_checkpointing,
-        task_type="SEQ_CLS",
+        use_gradient_checkpointing="unsloth",
     )
 
     return model
