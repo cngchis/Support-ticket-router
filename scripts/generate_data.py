@@ -10,15 +10,11 @@ import os
 
 load_dotenv()
 
-# Dùng OpenAI client nhưng trỏ vào Google AI Studio
-client = OpenAI(
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-    api_key=os.getenv("GOOGLE_API_KEY")
-)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 TAXONOMY_PATH     = "data/intent_taxonomy.json"
-OUTPUT_PATH       = "data/raw_dataset.jsonl"
-SAMPLES_PER_CLASS = 250
+OUTPUT_PATH       = "data/raw/raw_dataset.jsonl"
+SAMPLES_PER_CLASS = 2000
 BATCH_SIZE        = 25
 
 def load_taxonomy(path: str) -> dict:
@@ -61,9 +57,10 @@ def clean_response(raw: str) -> str:
 def generate_batch(intent: str, meta: dict, batch_size: int) -> list[str]:
     prompt = build_prompt(intent, meta, batch_size)
     response = client.chat.completions.create(
-        model="gemma-4-31b-it",  # ← model name Google AI Studio
+        model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.9
+        temperature=0.9,
+        max_tokens=2000
     )
     raw = clean_response(response.choices[0].message.content)
     return json.loads(raw)
@@ -89,7 +86,7 @@ def generate_for_intent(intent: str, meta: dict, total: int) -> list[dict]:
     return samples
 
 def main():
-    print("Loading taxonomy...")
+    print("Loading taxonomy")
     taxonomy = load_taxonomy(TAXONOMY_PATH)
 
     all_samples = []
