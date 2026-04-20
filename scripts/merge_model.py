@@ -1,26 +1,40 @@
-from unsloth import FastLanguageModel
 import torch
+import json
+import os
+from unsloth import FastLanguageModel
 from peft import PeftModel
 
-BASE_MODEL = "unsloth/Phi-4-mini-instruct"  # Base model
-ADAPTER_PATH = "models/phi4-intent-finetuned"  # LoRA adapter
-MERGED_PATH = "models/phi4-mini-intent"
+CHECKPOINT = "models/checkpoint-3510"
+BASE_MODEL  = "unsloth/Phi-4-mini-instruct"
+OUTPUT_DIR  = "models/phi4-mini-instruct-intent"
 
-# Load base model
+# LOAD BASEMODEL
 model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name=BASE_MODEL,
-    max_seq_length=2048,
-    dtype=None,
-    load_in_4bit=False
+    model_name="models/checkpoint-3510",
+    max_seq_length=256,
+    dtype=torch.float16,
+    load_in_4bit=True,
+    device_map="cpu",
 )
 
-# Load adapter into base model
-model = PeftModel.from_pretrained(model, ADAPTER_PATH)
+# APPLY LORA FROM CHECKPOIN
+model = PeftModel.from_pretrained(model, CHECKPOINT)
 
-# Merge adapter into base model
-model = model.merge_and_unload()
+# MERGE AND SAVE
+print("Merging and saving fp16")
+model.save_pretrained_merged(
+    OUTPUT_DIR,
+    tokenizer,
+    save_method="merged_16bit",
+)
 
-# Save
-model.save_pretrained(MERGED_PATH)
-tokenizer.save_pretrained(MERGED_PATH)
-print(f"Merged model saved to {MERGED_PATH}")
+# Clean config
+config_path = os.path.join(OUTPUT_DIR, "config.json")
+with open(config_path) as f:
+    config = json.load(f)
+config.pop("quantization_config", None)
+config.pop("model_name", None)
+with open(config_path, "w") as f:
+    json.dump(config, f, indent=2)
+
+print(f"Done! Saved to {OUTPUT_DIR}")

@@ -38,12 +38,6 @@ def format_prompt(text: str, label: str = None) -> str:
         prompt += f" {label}"
     return prompt
 
-def prepare_dataset(df):
-    return Dataset.from_dict({
-        "text": [
-            format_prompt(row["text"], row["label"])
-            for _, row in df.iterrows()
-        ]
-    })
+
 
 

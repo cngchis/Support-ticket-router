@@ -15,19 +15,6 @@ def prepare_dataset(df):
         ]
     })
 
-def compute_metrics(eval_pred):
-    logits = eval_pred.predictions
-    labels = eval_pred.label_ids
-
-    preds = np.argmax(logits, axis=-1)
-
-    return {
-        "accuracy": accuracy_score(labels, preds),
-        "f1": f1_score(labels, preds, average="weighted"),
-        "precision": precision_score(labels, preds, average="weighted"),
-        "recall": recall_score(labels, preds, average="weighted"),
-    }
-
 def main():
     # CONFIG
     base_model = "unsloth/Phi-4-mini-instruct"
@@ -37,25 +24,23 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     # LOAD MODEL
     model, tokenizer = load_model(base_model=base_model)
-
     model = apply_lora(model)
 
     # LOAD DATASET
     dataset = load_dataset("data/processed/clean_dataset.jsonl")
-
     # SPLIT DATASET
-    train_dataset, val_dataset, test_dataset = split_dataset(dataset)
+    train_df, val_df, test_df = split_dataset(dataset)
 
-    # Save Data Processed
+    # SAVE DATA PROCESSED
     os.makedirs("data/processed", exist_ok=True)
-    train_dataset.to_json("data/processed/train.jsonl", orient="records", lines=True, force_ascii=False)
-    val_dataset.to_json("data/processed/val.jsonl", orient="records", lines=True, force_ascii=False)
-    test_dataset.to_json("data/processed/test.jsonl", orient="records", lines=True, force_ascii=False)
-    
+    train_df.to_json("data/processed/train.jsonl", orient="records", lines=True, force_ascii=False)
+    val_df.to_json("data/processed/val.jsonl", orient="records", lines=True, force_ascii=False)
+    test_df.to_json("data/processed/test.jsonl", orient="records", lines=True, force_ascii=False)
+    print(f"Train: {len(train_df)} | Val: {len(val_df)} | Test: {len(test_df)}")
+
     # PREPARE DATASET
-    train_dataset = prepare_dataset(train_dataset).shuffle(seed=42)
-    val_dataset = prepare_dataset(val_dataset)
-    test_dataset = prepare_dataset(test_dataset)
+    train_dataset = prepare_dataset(train_df).shuffle(seed=42)
+    val_dataset = prepare_dataset(val_df)
 
     # TRAINING CONFIG
     training_arguments = TrainingArguments(
@@ -67,7 +52,7 @@ def main():
         save_strategy="epoch",
         warmup_steps=50,
         learning_rate=2e-4,
-        fp16=True,
+        fp16=not is_bfloat16_supported(),
         bf16=is_bfloat16_supported(),
         optim="paged_adamw_32bit",
         weight_decay=0.01,
@@ -87,32 +72,49 @@ def main():
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         dataset_text_field="text",
-        max_seq_length=512,
+        max_seq_length=256,
         args=training_arguments,
         callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
-        compute_metrics=compute_metrics,
     )
 
     # TRAIN
     print("Start training")
     trainer.train()
 
-    # MERGE
-    model = trainer.model
-    model = model.merge_and_unload()
-    
-    # SAVE MODEL
-    model.save_pretrained(os.path.join(output_dir, new_model))
-    tokenizer.save_pretrained(os.path.join(output_dir, new_model))
-    print("Model saved!")
+    save_path = os.path.join(output_dir, new_model)
 
-    # SAVE MODEL WITH GGUF
-    model.save_pretrained_gguf(
-        os.path.join(output_dir, new_model + "-gguf"),
+    # MERGE
+    trainer.model.save_pretrained_merged(
+        save_path,
         tokenizer,
-        quantization_method="q4_k_m"
+        save_method="merged_16bit",
     )
-    print("GGUF model saved!")
+    print(f"Model saved → {save_path}")
+
+
+    # CLEAN CONFIG JSON
+    config_path = os.path.join(save_path, "config.json")
+    with open(config_path) as f:
+        config = json.load(f)
+    if "quantization_config" in config:
+        config.pop("quantization_config", None)
+        config.pop("model_name", None)
+        with open(config_path, "w") as f:
+            json.dump(config, f, indent=2)
+        print("Cleaned quantization_config from config.json")
+
+    # SAVE GGUF
+    try:
+        trainer.model.save_pretrained_gguf(
+            os.path.join(output_dir, new_model + "-gguf"),
+            tokenizer,
+            quantization_method="q4_k_m",
+        )
+        print("GGUF saved!")
+    except Exception as e:
+        print(f"GGUF save skipped: {e}")
+
+    
     print(f'Training complete & model saved to {output_dir}')
 if __name__ == "__main__":
     main()
