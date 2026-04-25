@@ -3,7 +3,7 @@ matplotlib==3.10.8
 python-dotenv
 seaborn==0.13.2
 scikit-learn==1.8.0
-jsonline==4.0.0
+jsonlines
 datasets==4.3.0
 transformers==4.57.6
 unsloth==2026.4.2
@@ -17,3 +17,4 @@ uvicorn==0.44.0
 pydantic==2.12.5
 trl==0.24.0
 peft==0.18.1
+llama_cpp_python==0.3.20
