@@ -2,25 +2,56 @@
 import time
 import os
 import re
-# from unsloth import FastLanguageModel
+from unsloth import FastLanguageModel
 from llama_cpp import Llama
 from api.config import LABELS
 import torch
 import logging
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
+from huggingface_hub import hf_hub_download
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-MODEL_PATH = "models/phi4-mini-instruct-intent"
-GGUF_PATH = "models/model-q4_k_m.gguf"
+# Load GGUF từ HuggingFace Hub
+GGUF_REPO   = os.getenv("GGUF_REPO","cngchis/phi4-mini-intent-GGUF")
+GGUF_FILE   = os.getenv("GGUF_FILE","phi-4-mini-intent-q4_k_m.gguf")
+GGUF_PATH = os.getenv("GGUF_PATH")
+
+# Resolve GGUF path
+if GGUF_PATH and os.path.exists(GGUF_PATH):
+    # Use local path if it exists
+    resolved_gguf_path = GGUF_PATH
+    print(f"[GGUF] Using local path: {resolved_gguf_path}")
+else:
+    # Download from HuggingFace Hub
+    print(f"[GGUF] Downloading from HuggingFace: {GGUF_REPO}/{GGUF_FILE}")
+    resolved_gguf_path = hf_hub_download(
+        repo_id  = GGUF_REPO,
+        filename = GGUF_FILE,
+        token    = os.getenv("HF_TOKEN")  # optional if repo private
+    )
+    print(f"[GGUF] Downloaded to: {resolved_gguf_path}")
+
+MODEL_PATH = os.getenv("MODEL_PATH", "cngchis/phi4-mini-intent")
 MAX_SEQ_LEN = 512
 
 # Initialize OpenAI client
-openai_client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+openai_available = False
+
+if OPENAI_API_KEY:
+    try:
+        openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+        openai_available = True
+        logger.info("OpenAI client loaded successfully")
+    except Exception as e:
+        logger.warning(f"OpenAI client load failed: {e}")
+else:
+    logger.info("OPENAI_API_KEY not set — GPT-4o-mini disabled")
 
 # Load Phi-4 finetuned with unsloth (SLM)
 try:
@@ -40,7 +71,7 @@ except Exception as e:
 # LOAD GGUF MODEL (CPU / lightweight)
 try:
     llm = Llama(
-        model_path=GGUF_PATH,
+        model_path=resolved_gguf_path,
         n_ctx=512,
         n_threads=8,
         n_gpu_layers=0,
@@ -52,60 +83,43 @@ except Exception as e:
     logger.warning(f"GGUF load failed: {e}")
     gguf_available = False
 
-def format_prompt(text: str) -> str:
-    return f"""
-    You are a STRICT intent classifier for customer support messages.
+def process_input(raw: str) -> str:
+    # Extract clean text from raw
+    # remove newline escape
+    text = raw.replace("\\n", " ").replace("\n", " ")
 
-    You MUST choose EXACTLY ONE label from:
-    [api, billing, cancellation, complaint, technical, upgrade]
-    
-    LABEL DEFINITIONS:
-    api:
-    - ONLY when user explicitly mentions API, endpoint, token, integration, request/response
-    - Do NOT use if there is a stronger issue like crash or payment
-    billing:
-    - payment, charge, refund, invoice, pricing, subscription cost issues
-    cancellation:
-    - explicit OR implicit intent to stop/leave/switch/cancel service    
-    technical:
-    - system malfunction: bug, error, crash, not working, slow, broken features    
-    upgrade:
-    - change plan: upgrade, downgrade, subscription modification
-    complaint:
-    - ONLY general dissatisfaction
-    - NO clear technical issue
-    - NO billing issue
-    - NO explicit system/API failure
-    - NO clear action (cancel/upgrade)
-    Examples of complaint:
-    - "I’m not happy with the service"
-    - "This is disappointing"
-    - "Bad experience overall"
-    - "Quality is not good"
+    # remove greeting
+    greetings = [
+        "hi team", "hi", "hello", "dear", "good morning",
+        "good afternoon", "thanks", "thank you", "regards",
+        "best regards", "sincerely"
+    ]
+    text_lower = text.lower()
+    for g in greetings:
+        text_lower = text_lower.replace(g, "")
 
-    DECISION RULES:
-    1. If user expresses intent to STOP service → cancellation (highest priority)
-    2. If payment/charge issue exists → billing
-    3. If system error/crash exists → technical
-    4. If API issue → api (only if no stronger issue exists)
-    5. If multiple intents exist → choose MOST ACTIONABLE intent
-    6. complaint = ONLY fallback when NO clear issue exists
-    7. Never output explanation
-    8. Never output multiple labels
+    text = re.sub(r'\s+', ' ', text_lower).strip()
 
-    IMPORTANT:
-    - complaint is the DEFAULT WEAK LABEL
-    - avoid choosing complaint if ANY concrete issue exists
+    return text
 
-    FORMAT (STRICT):
-    Return ONLY one word:
-    api OR billing OR cancellation OR complaint OR technical OR upgrade
+def format_prompt(text: str, label: str = None) -> str:
+    prompt = f"""Classify the customer support message into one of these intents:
+    api, billing, cancellation, complaint, technical, upgrade
 
-    MESSAGE:
-    {text}
+    Rules:
+    - If message mentions API-related terms (api, endpoint, token, request, response, webhook, integration) → api
+    - Even if there is error, failure, or not working → STILL api
+    - bug, crash, not working (no API) → technical
+    - payment, charge → billing
+    - cancel/stop → cancellation
+    - change plan → upgrade
+    - otherwise → complaint
+    Message: {text}
 
-    ANSWER:
-    """
+    Intent:"""
+    if label:
+        prompt += f" {label}"
+    return prompt
 
 def extract_label(raw: str) -> str:
     raw = re.sub(r'<thought>.*?</thought>', '', raw, flags=re.DOTALL)
@@ -117,6 +131,7 @@ def extract_label(raw: str) -> str:
     if words:
         return words[-1]
     return "unknown"
+    
 def infer_phi4_gguf(text: str) -> dict:
     if not gguf_available:
         return {"intent": "unknown", "latency_ms": 0, "confidence": 0.0, "model": "phi4_gguf"}
@@ -227,12 +242,28 @@ async def parallel_infer(text: str) -> dict:
     """Run all models in parallel and aggregate results"""
     start = time.time()
     
+    tasks = []
+
+    if phi4_ft_available:
+        tasks.append(infer_phi4_finetuned(text))
+    
+    if gguf_available:
+        tasks.append(asyncio.to_thread(infer_phi4_gguf, text))
+    
+    if openai_available:
+        tasks.append(infer_gpt4o_mini(text))
+
+    if not tasks:
+        return {
+            "intent"              : "unknown",
+            "confidence"          : 0.0,
+            "model_results"       : [],
+            "total_latency_ms"    : 0,
+            "individual_latencies": {}
+        }
+
     # Run all models concurrently
-    results = await asyncio.gather(
-        infer_phi4_finetuned(text),
-        asyncio.to_thread(infer_phi4_gguf, text),
-        infer_gpt4o_mini(text)
-    )
+    results = await asyncio.gather(*tasks)
     
     total_latency = (time.time() - start) * 1000
     
@@ -262,7 +293,9 @@ async def parallel_infer(text: str) -> dict:
 
 
 def predict(text: str) -> dict:
-    """Wrapper for sync context - uses event loop"""
+    text = process_input(text)
+
+    # Wrapper for sync context - uses event loop
     try:
         loop = asyncio.get_event_loop()
     except RuntimeError:
