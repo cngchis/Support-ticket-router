@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MODEL_PATH=${MODEL_PATH}
+      - GGUF_PATH=${GGUF_PATH}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - ./models:/app/models
+    restart: unless-stopped

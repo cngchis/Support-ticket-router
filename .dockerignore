@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# Development only
+scripts/
+notebooks/
+data/
+frontend/
+
+# Git
+.git/
+.gitignore
+
+# Archives
+*.zip
+*.tar.gz
+
+# Models backup
+models/
+
+# Misc
+*.md
+README.md
